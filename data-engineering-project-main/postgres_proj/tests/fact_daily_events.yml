@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: fact_daily_events
+    description: "Daily aggregated SaaS event metrics"
+
+    columns:
+      - name: event_date
+        description: "Date the events occurred"
+        tests:
+          - not_null
+          - unique
+
+      - name: total_events
+        description: "Total number of events on that day"
+        tests:
+          - not_null
+
+      - name: signup_events
+        description: "Number of signup events on that day"
+        tests:
+          - not_null
+
+      - name: login_events
+        description: "Number of login events on that day"
+        tests:
+          - not_null
+
+      - name: view_dashboard_events
+        description: "Number of dashboard views on that day"
+        tests:
+          - not_null
+
+      - name: create_project_events
+        description: "Number of project creation events on that day"
+        tests:
+          - not_null
+
+      - name: upgrade_plan_events
+        description: "Number of plan upgrade events on that day"
+        tests:
+          - not_null
+
+      - name: cancel_subscription_events
+        description: "Number of subscription cancellation events on that day"
+        tests:
+          - not_null

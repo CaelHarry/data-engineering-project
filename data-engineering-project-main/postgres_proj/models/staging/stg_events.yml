@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_events
+    description: "Deduplicated SaaS events with clean types"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - event_id
+
+    columns:
+      - name: event_id
+        description: "Unique identifier for an event after deduplication"
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: "User who generated the event"
+        tests:
+          - not_null
+
+      - name: event_type
+        description: "Type of SaaS event"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - signup
+                - login
+                - view_dashboard
+                - create_project
+                - upgrade_plan
+                - cancel_subscription
+
+      - name: event_timestamp
+        description: "When the event actually occurred"
+        tests:
+          - not_null
+
+      - name: ingestion_timestamp
+        description: "When the event was ingested"
+        tests:
+          - not_null

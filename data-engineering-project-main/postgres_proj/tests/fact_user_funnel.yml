@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: fact_user_funnel
+    description: "User-level SaaS funnel progression"
+
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+          - unique
+
+      - name: did_signup
+        tests:
+          - not_null
+
+      - name: did_login
+        tests:
+          - not_null
+
+      - name: did_view_dashboard
+        tests:
+          - not_null
+
+      - name: did_create_project
+        tests:
+          - not_null
+
+      - name: did_upgrade_plan
+        tests:
+          - not_null

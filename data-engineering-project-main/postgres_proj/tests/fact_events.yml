@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: fact_events
+    description: "Analytics-ready fact table containing all SaaS events"
+
+    columns:
+      - name: event_id
+        description: "Unique identifier for each event"
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: "User associated with the event"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
+
+      - name: event_type
+        description: "Type of SaaS event"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - signup
+                - login
+                - view_dashboard
+                - create_project
+                - upgrade_plan
+                - cancel_subscription
+
+      - name: event_timestamp
+        description: "Timestamp when the event occurred"
+        tests:
+          - not_null
+
+      - name: ingestion_timestamp
+        description: "Timestamp when the event was ingested"
+        tests:
+          - not_null

@@ -1,0 +1,35 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    description: "Raw SaaS data ingested from JSON files via Python ingestion scripts"
+
+    tables:
+      - name: users
+        description: "Raw users table (append-only)"
+        columns:
+          - name: user_id
+            description: "Unique identifier for a user"
+          - name: signup_timestamp
+            description: "Timestamp when the user signed up"
+
+      - name: events
+        description: "Raw events table (may contain duplicates and late-arriving events)"
+        loaded_at_field: ingestion_timestamp
+        freshness:
+          warn_after:
+            count: 24
+            period: hour
+
+        columns:
+          - name: event_id
+            description: "Unique event identifier (not deduplicated in raw)"
+          - name: user_id
+            description: "User who generated the event"
+          - name: event_type
+            description: "Type of SaaS event (login, upgrade_plan, etc.)"
+          - name: event_timestamp
+            description: "When the event actually occurred"
+          - name: ingestion_timestamp
+            description: "When the event was ingested into the warehouse"
