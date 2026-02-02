@@ -1,25 +1,28 @@
 services:
   airflow:
-    image: apache/airflow:2.8.1
+    build: .
+    image: saas-airflow:latest
+    container_name: airflow
+    ports:
+      - "8080:8080"
+    volumes:
+    - ./dags:/opt/airflow/dags
+    - ../generators:/opt/project/generators
+    - ../ingestion:/opt/project/ingestion
+    - ../postgres_proj:/opt/project/postgres_proj
+    - ../data:/opt/project/data
     environment:
       AIRFLOW__CORE__EXECUTOR: SequentialExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
-      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ../:/opt/project
-    ports:
-      - "8081:8080"
     command: >
       bash -c "
       airflow db migrate &&
-      (airflow users create
-        --username admin
-        --password admin
-        --firstname Admin
+      airflow users create \
+        --username cael \
+        --password admin \
+        --firstname Admin \
         --lastname User
         --role Admin
-        --email admin@example.com || true) &&
-      airflow webserver --port 8080 &
-      airflow scheduler
+        --email caelharry@berkeley.edu || true &&
+      exec airflow standalone
       "
