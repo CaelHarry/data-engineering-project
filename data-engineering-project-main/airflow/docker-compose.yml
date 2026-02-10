@@ -11,18 +11,20 @@ services:
     - ../ingestion:/opt/project/ingestion
     - ../postgres_proj:/opt/project/postgres_proj
     - ../data:/opt/project/data
+    - ../profiles.yml:/home/airflow/.dbt/profiles.yml
     environment:
       AIRFLOW__CORE__EXECUTOR: SequentialExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
     command: >
       bash -c "
       airflow db migrate &&
-      airflow users create \
-        --username cael \
-        --password admin \
-        --firstname Admin \
-        --lastname User
+      airflow users create
+        --username cael
+        --password admin
+        --firstname Cael
+        --lastname Harry
         --role Admin
         --email caelharry@berkeley.edu || true &&
-      exec airflow standalone
+      airflow webserver --port 8080 &
+      airflow scheduler
       "
