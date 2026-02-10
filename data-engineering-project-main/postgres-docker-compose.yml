@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: charry
       POSTGRES_PASSWORD: password1
-      POSTGRES_DB: database1
+      POSTGRES_DB: project-db
     ports:
       - "5432:5432"
     volumes:

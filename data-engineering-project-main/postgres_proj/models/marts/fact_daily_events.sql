@@ -1,12 +1,14 @@
 {{ config(
     materialized = 'incremental',
-    unique_key = 'event_date'
+    unique_key = 'event_date',
+    on_schema_change = 'append_new_columns'
 ) }}
 
 with events as (
 
     select
         event_timestamp::date as event_date,
+        user_id,
         event_type,
         ingestion_timestamp
     from {{ ref('fact_events') }}
@@ -26,9 +28,17 @@ daily_aggregates as (
     select
         event_date,
 
+        -- Volume metrics
         count(*) as total_events,
+        count(distinct user_id) as daily_active_users,
 
+        -- Per-user metric
+        count(*)::float / nullif(count(distinct user_id), 0) as events_per_user,
+
+        -- Event breakdowns
         count(*) filter (where event_type = 'signup') as signup_events,
+        count(distinct user_id) filter (where event_type = 'signup') as signup_users,
+
         count(*) filter (where event_type = 'login') as login_events,
         count(*) filter (where event_type = 'view_dashboard') as view_dashboard_events,
         count(*) filter (where event_type = 'create_project') as create_project_events,

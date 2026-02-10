@@ -45,3 +45,19 @@ models:
         description: "Number of subscription cancellation events on that day"
         tests:
           - not_null
+models:
+  - name: fact_daily_events
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - event_date
+    columns:
+      - name: event_date
+        tests:
+          - not_null
+      - name: total_events
+        tests:
+          - not_null
+      - name: daily_active_users
+        tests:
+          - not_null

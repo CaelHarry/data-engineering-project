@@ -6,7 +6,7 @@ from pathlib import Path
 DATA_DIR = Path("data/raw")
 
 DB_CONFIG = {
-    "host": "localhost",
+    "host": "host.docker.internal",
     "port": 5432,
     "dbname": "project-db",
     "user": "charry",
